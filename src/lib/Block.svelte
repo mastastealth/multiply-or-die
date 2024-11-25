@@ -2,6 +2,7 @@
 	import Timer from "easytimer.js";
 	import boom from "../assets/boom.gif";
 	import mushroom from "../assets/mushroom.png";
+	import mushroom2 from "../assets/mushroom2.png";
 
 	const timer = new Timer();
 	const { addToGrid, addToScore, gameOver, x, y, from } = $props();
@@ -105,7 +106,7 @@
 	<img
 		class={gameOver &&
 			"animate__animated animate__infinite animate__rubberBand"}
-		src={mushroom}
+		src={getRandom(2) === 1 ? mushroom : mushroom2}
 		alt="Little Guy"
 		data-show
 		data-mushroom
