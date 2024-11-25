@@ -38,7 +38,15 @@
 
 <main>
 	{#if gameOver}
-		<button onclick={() => location.reload()}>Restart</button>
+		<dialog open>
+			<h2>{fullGrid.length === 50 ? "Congratulations!" : "You died!"}</h2>
+			<p>
+				{fullGrid.length === 50
+					? "Your village was so amazing, it exploded."
+					: "Your village has exploded."}
+			</p>
+			<button onclick={() => location.reload()}>Restart</button>
+		</dialog>
 	{/if}
 
 	<header>
@@ -78,12 +86,14 @@
 		width: 100%;
 	}
 
-	button {
-		font-size: 2em;
-		position: fixed;
-		top: 20px;
-		right: 20px;
+	dialog {
+		background: rgba(0, 0, 0, 0.5);
+		bottom: 20px;
 		z-index: 99;
+
+		button {
+			background: rgb(171, 12, 12);
+		}
 	}
 
 	.grid {
