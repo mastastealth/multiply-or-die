@@ -1,6 +1,8 @@
 <script>
 	import Timer from "easytimer.js";
+	import { Howl } from "howler";
 	import boom from "../assets/boom.gif";
+	import powerup from "../assets/boost.mp3";
 	import mushroom from "../assets/mushroom.png";
 	import mushroom2 from "../assets/mushroom2.png";
 
@@ -19,6 +21,11 @@
 		s: [getRandom(12), getRandom(12)],
 		w: [getRandom(12), getRandom(12)],
 	};
+	const boost = new Howl({
+		src: powerup,
+		preload: true,
+		volume: 0.5,
+	});
 
 	let selected = $state(false);
 	let direction = $state(["n", "e", "s", "w"].filter((d) => d !== from));
@@ -47,9 +54,11 @@
 
 				if (time.seconds <= 2) {
 					addToScore(500);
+					boost.play();
 					speed = 2;
 				} else if (time.seconds <= 5) {
 					addToScore(200);
+					boost.play();
 					speed = 1;
 				} else {
 					addToScore(100);

@@ -7,31 +7,37 @@
 	let score = $state(0);
 	let gameOver = $state(null);
 	let newHighscore = $state(false);
+	const maxBlocks = 50;
 
 	const explosion = new Howl({
-		src: [explode],
-		html5: true,
-		volume: 0.5,
+		src: explode,
+		preload: true,
+		volume: 0.4,
 	});
 
 	function addToGrid(x, y, from) {
 		fullGrid.push({ x, y, from });
+		if (fullGrid.length + 1 === maxBlocks) finishGame();
+	}
+
+	function finishGame() {
+		gameOver = true;
+		explosion.play();
+
+		if (
+			parseInt(localStorage.getItem("highscore")) < score ||
+			!localStorage.getItem("highscore")
+		) {
+			localStorage.setItem("highscore", `${score}`);
+			newHighscore = true;
+		}
 	}
 
 	function addToScore(n) {
 		if (n) {
 			score += n;
 		} else {
-			gameOver = true;
-			explosion.play();
-
-			if (
-				parseInt(localStorage.getItem("highscore")) < score ||
-				!localStorage.getItem("highscore")
-			) {
-				localStorage.setItem("highscore", `${score}`);
-				newHighscore = true;
-			}
+			finishGame();
 		}
 	}
 </script>
@@ -39,13 +45,22 @@
 <main>
 	{#if gameOver}
 		<dialog open>
-			<h2>{fullGrid.length === 50 ? "Congratulations!" : "You died!"}</h2>
+			<h2>
+				{fullGrid.length + 1 === maxBlocks ? "Congratulations!" : "You died!"}
+			</h2>
 			<p>
-				{fullGrid.length === 50
+				{fullGrid.length + 1 === maxBlocks
 					? "Your village was so amazing, it exploded."
 					: "Your village has exploded."}
 			</p>
-			<button onclick={() => location.reload()}>Restart</button>
+			<button
+				onclick={() => {
+					fullGrid = [];
+					score = 0;
+					gameOver = null;
+					newHighscore = false;
+				}}>Restart</button
+			>
 		</dialog>
 	{/if}
 
