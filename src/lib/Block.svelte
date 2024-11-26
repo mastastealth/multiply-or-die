@@ -4,6 +4,7 @@
 	import getRandom from "./random";
 	import boom from "../assets/boom.gif";
 	import powerup from "../assets/boost.mp3";
+	import squish from "../assets/squish.mp3";
 	import mushroom from "../assets/mushroom.png";
 	import mushroom2 from "../assets/mushroom2.png";
 	import mushroom3 from "../assets/mushroom3.png";
@@ -35,6 +36,10 @@
 		src: powerup,
 		preload: true,
 		volume: 0.5,
+	});
+	const splurt = new Howl({
+		src: squish,
+		preload: true,
 	});
 
 	let selected = $state(false);
@@ -83,6 +88,7 @@
 					speed = 1;
 				} else {
 					addToScore(100);
+					splurt.play();
 				}
 
 				switch (dir) {
