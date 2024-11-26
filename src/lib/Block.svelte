@@ -1,13 +1,23 @@
 <script>
 	import Timer from "easytimer.js";
 	import { Howl } from "howler";
+	import getRandom from "./random";
 	import boom from "../assets/boom.gif";
 	import powerup from "../assets/boost.mp3";
 	import mushroom from "../assets/mushroom.png";
 	import mushroom2 from "../assets/mushroom2.png";
+	import mushroom3 from "../assets/mushroom3.png";
 
 	const timer = new Timer();
-	const { addToGrid, addToScore, gameOver, x, y, from } = $props();
+	const {
+		addToGrid,
+		addToScore,
+		gameOver,
+		fullGrid = [],
+		x,
+		y,
+		from,
+	} = $props();
 	const isCenter = !from;
 	const style =
 		!isCenter &&
@@ -30,11 +40,22 @@
 	let selected = $state(false);
 	let direction = $state(["n", "e", "s", "w"].filter((d) => d !== from));
 	let speed = $state(0);
+	const mushroomSpr = {
+		1: mushroom,
+		2: mushroom2,
+		3: mushroom3,
+	};
 
-	function getRandom(max, min = 1) {
-		const minCeiled = Math.ceil(min);
-		const maxFloored = Math.floor(max);
-		return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+	// If this was created by another box, let's do more updates to directions
+	if (from) {
+		if (fullGrid.find((block) => block.x === x && block.y === y - 1))
+			direction = direction.filter((d) => d !== "n");
+		if (fullGrid.find((block) => block.x === x && block.y === y + 1))
+			direction = direction.filter((d) => d !== "s");
+		if (fullGrid.find((block) => block.y === y && block.x === x - 1))
+			direction = direction.filter((d) => d !== "w");
+		if (fullGrid.find((block) => block.y === y && block.x === x + 1))
+			direction = direction.filter((d) => d !== "e");
 	}
 
 	function onEnter(e, dir) {
@@ -115,7 +136,7 @@
 	<img
 		class={gameOver &&
 			"animate__animated animate__infinite animate__rubberBand"}
-		src={getRandom(2) === 1 ? mushroom : mushroom2}
+		src={mushroomSpr[getRandom(3)]}
 		alt="Little Guy"
 		data-show
 		data-mushroom

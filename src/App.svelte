@@ -2,6 +2,7 @@
 	import Block from "./lib/Block.svelte";
 	import explode from "./assets/explode.mp3";
 	import { Howl } from "howler";
+	import getRandom from "./lib/random";
 
 	let fullGrid = $state([]);
 	let score = $state(0);
@@ -24,13 +25,24 @@
 		gameOver = true;
 		explosion.play();
 
+		// Save new highscore
 		if (
-			parseInt(localStorage.getItem("highscore")) < score ||
-			!localStorage.getItem("highscore")
+			!localStorage.getItem("highscore") ||
+			parseInt(localStorage.getItem("highscore")) < score
 		) {
 			localStorage.setItem("highscore", `${score}`);
 			newHighscore = true;
 		}
+
+		// Move sprites to rain down
+		document.querySelectorAll("[data-mushroom]").forEach((el) => {
+			const bod = document.body.getBoundingClientRect();
+			el.setAttribute("data-fall", "true");
+			el.style.left = `${getRandom(bod.width) - 200}px`;
+			el.style.animationDuration = `${getRandom(7, 2)}s`;
+			el.style.animationDelay = `${getRandom(3, 0)}s`;
+			document.body.appendChild(el);
+		});
 	}
 
 	function addToScore(n) {
@@ -59,6 +71,7 @@
 					score = 0;
 					gameOver = null;
 					newHighscore = false;
+					document.querySelectorAll("[data-fall]").forEach((el) => el.remove());
 				}}>Restart</button
 			>
 		</dialog>
@@ -76,12 +89,17 @@
 	</header>
 
 	<div class="grid">
-		<Block {addToGrid} {addToScore} {gameOver} x={0} y={0} from={null} />
+		{#if !gameOver}
+			<Block {addToGrid} {addToScore} {gameOver} x={0} y={0} from={null} />
+		{:else}
+			<Block {addToGrid} {addToScore} {gameOver} x={0} y={0} from={null} />
+		{/if}
 
 		{#each fullGrid as block}
 			<Block
 				{addToGrid}
 				{addToScore}
+				{fullGrid}
 				{gameOver}
 				x={block.x}
 				y={block.y}
@@ -104,6 +122,7 @@
 	dialog {
 		background: rgba(0, 0, 0, 0.5);
 		bottom: 20px;
+		color: white;
 		z-index: 99;
 
 		button {
@@ -127,5 +146,24 @@
 				color: gold;
 			}
 		}
+	}
+
+	@keyframes fall {
+		from {
+			translate: 0 0;
+			rotate: 0deg;
+		}
+		to {
+			translate: 0 150vh;
+			rotate: 720deg;
+		}
+	}
+
+	:global(img[data-fall]) {
+		animation: fall 5s;
+		animation-fill-mode: forwards;
+		animation-timing-function: cubic-bezier(0.6, -0.28, 0.74, 0.05);
+		position: absolute;
+		top: -100px;
 	}
 </style>
