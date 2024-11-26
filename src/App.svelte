@@ -8,6 +8,7 @@
 	let score = $state(0);
 	let gameOver = $state(null);
 	let newHighscore = $state(false);
+	let currentHighScore = $state(localStorage.getItem("highscore") || 0);
 	const maxBlocks = 50;
 
 	const explosion = new Howl({
@@ -16,8 +17,8 @@
 		volume: 0.4,
 	});
 
-	function addToGrid(x, y, from) {
-		fullGrid.push({ x, y, from });
+	function addToGrid(x, y, from, score) {
+		fullGrid.push({ x, y, from, score });
 		if (fullGrid.length + 1 === maxBlocks) finishGame();
 	}
 
@@ -32,15 +33,16 @@
 		) {
 			localStorage.setItem("highscore", `${score}`);
 			newHighscore = true;
+			currentHighScore = score;
 		}
 
 		// Move sprites to rain down
+		const bod = document.body.getBoundingClientRect();
 		document.querySelectorAll("[data-mushroom]").forEach((el) => {
-			const bod = document.body.getBoundingClientRect();
 			el.setAttribute("data-fall", "true");
 			el.style.left = `${getRandom(bod.width) - 200}px`;
 			el.style.animationDuration = `${getRandom(7, 2)}s`;
-			el.style.animationDelay = `${getRandom(3, 0)}s`;
+			el.style.animationDelay = `${getRandom(2, 0)}.${getRandom(9, 0)}s`;
 			document.body.appendChild(el);
 		});
 	}
@@ -85,7 +87,7 @@
 					"animate__animated animate__infinite animate__bounce"}>{score}</strong
 			>
 		</p>
-		<p>Highscore: <strong>{localStorage.getItem("highscore") || 0}</strong></p>
+		<p>Highscore: <strong>{currentHighScore}</strong></p>
 	</header>
 
 	<div class="grid">
@@ -104,6 +106,7 @@
 				x={block.x}
 				y={block.y}
 				from={block.from}
+				score={block.score}
 			/>
 		{/each}
 	</div>

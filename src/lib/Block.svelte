@@ -4,6 +4,7 @@
 	import getRandom from "./random";
 	import boom from "../assets/boom.gif";
 	import powerup from "../assets/boost.mp3";
+	import powerup_sm from "../assets/boost_sm.mp3";
 	import squish from "../assets/squish.mp3";
 	import mushroom from "../assets/mushroom.png";
 	import mushroom2 from "../assets/mushroom2.png";
@@ -18,6 +19,7 @@
 		x,
 		y,
 		from,
+		score = 0,
 	} = $props();
 	const isCenter = !from;
 	const style =
@@ -34,6 +36,11 @@
 	};
 	const boost = new Howl({
 		src: powerup,
+		preload: true,
+		volume: 0.5,
+	});
+	const boost2 = new Howl({
+		src: powerup_sm,
 		preload: true,
 		volume: 0.5,
 	});
@@ -77,29 +84,31 @@
 			if (answer === parseInt(input.value)) {
 				console.log("CORRECT", time.seconds);
 				direction = direction.filter((d) => d !== dir);
+				let score = 100;
 
 				if (time.seconds <= 2) {
-					addToScore(500);
+					score = 500;
 					boost.play();
 					speed = 2;
 				} else if (time.seconds <= 5) {
-					addToScore(200);
-					boost.play();
+					score = 200;
+					boost2.play();
 					speed = 1;
 				} else {
-					addToScore(100);
 					splurt.play();
 				}
 
+				addToScore(score);
+
 				switch (dir) {
 					case "n":
-						return addToGrid(x, y - 1, "s");
+						return addToGrid(x, y - 1, "s", score);
 					case "e":
-						return addToGrid(x + 1, y, "w");
+						return addToGrid(x + 1, y, "w", score);
 					case "s":
-						return addToGrid(x, y + 1, "n");
+						return addToGrid(x, y + 1, "n", score);
 					case "w":
-						return addToGrid(x - 1, y, "e");
+						return addToGrid(x - 1, y, "e", score);
 				}
 			} else {
 				console.log("WRONG");
@@ -114,6 +123,10 @@
 		2 && 'animate__tada'}"
 	{style}
 >
+	{#if score}
+		<span class="score animate__animated animate__fadeOutUp">{score}</span>
+	{/if}
+
 	<label>
 		<input type="checkbox" bind:checked={selected} disabled={gameOver} />
 	</label>
@@ -223,6 +236,14 @@
 			left: auto;
 			right: 0;
 		}
+	}
+
+	.score {
+		color: yellow;
+		display: block;
+		font-size: 1.5em;
+		font-weight: bold;
+		pointer-events: none;
 	}
 
 	label:has(input:checked, input[type="text"]:focus) {
