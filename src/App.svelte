@@ -130,6 +130,7 @@
 
 		button {
 			background: rgb(171, 12, 12);
+			color: white;
 		}
 	}
 

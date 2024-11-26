@@ -73,6 +73,7 @@
 	function onEnter(e, dir) {
 		const answer = problems[dir][0] * problems[dir][1];
 		const input = e.target;
+		console.log(`${problems[dir][0]} x ${problems[dir][1]}`, input.value);
 
 		// On Enter
 		if (e.key === "Enter") {
@@ -131,26 +132,28 @@
 		<input type="checkbox" bind:checked={selected} disabled={gameOver} />
 	</label>
 
-	{#each direction as dir (dir)}
-		<div class="expand" data-dir={dir}>
-			<label>
-				<input
-					type="text"
-					maxlength="3"
-					onclick={() => {
-						timer.start();
-					}}
-					onkeydown={(e) => onEnter(e, dir)}
-					placeholder="Click me"
-				/>
-			</label>
+	{#if !gameOver}
+		{#each direction as dir (dir)}
+			<div class="expand" data-dir={dir}>
+				<label>
+					<input
+						type="text"
+						maxlength="3"
+						onclick={() => {
+							timer.start();
+						}}
+						onkeydown={(e) => onEnter(e, dir)}
+						placeholder="Click me"
+					/>
+				</label>
 
-			<footer>
-				<span data-num={problems[dir][0]}>{problems[dir][0]}</span> &times;
-				<span data-num={problems[dir][1]}>{problems[dir][1]}</span>
-			</footer>
-		</div>
-	{/each}
+				<footer>
+					<span data-num={problems[dir][0]}>{problems[dir][0]}</span> &times;
+					<span data-num={problems[dir][1]}>{problems[dir][1]}</span>
+				</footer>
+			</div>
+		{/each}
+	{/if}
 
 	<img
 		class={gameOver &&
