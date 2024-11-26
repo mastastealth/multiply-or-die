@@ -244,6 +244,9 @@
 		font-size: 1.5em;
 		font-weight: bold;
 		pointer-events: none;
+		position: absolute;
+		text-align: center;
+		width: 100%;
 	}
 
 	label:has(input:checked, input[type="text"]:focus) {
