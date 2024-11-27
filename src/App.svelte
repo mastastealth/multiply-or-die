@@ -41,7 +41,7 @@
 		document.querySelectorAll("[data-mushroom]").forEach((el) => {
 			el.setAttribute("data-fall", "true");
 			el.style.left = `${getRandom(bod.width) - 200}px`;
-			el.style.animationDuration = `${getRandom(7, 2)}s`;
+			el.style.animationDuration = `${getRandom(4, 1)}.${getRandom(9, 0)}s`;
 			el.style.animationDelay = `${getRandom(2, 0)}.${getRandom(9, 0)}s`;
 			document.body.appendChild(el);
 		});
@@ -165,8 +165,7 @@
 
 	:global(img[data-fall]) {
 		animation: fall 5s;
-		animation-fill-mode: forwards;
-		animation-timing-function: cubic-bezier(0.6, -0.28, 0.74, 0.05);
+		animation-timing-function: cubic-bezier(0.43, 0.01, 1, 1);
 		position: absolute;
 		top: -100px;
 	}
