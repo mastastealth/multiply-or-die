@@ -41,7 +41,7 @@
 		document.querySelectorAll("[data-mushroom]").forEach((el) => {
 			el.setAttribute("data-fall", "true");
 			el.style.left = `${getRandom(bod.width) - 200}px`;
-			el.style.animationDuration = `${getRandom(4, 1)}.${getRandom(9, 0)}s`;
+			el.style.animationDuration = `${getRandom(4, 2)}.${getRandom(9, 0)}s`;
 			el.style.animationDelay = `${getRandom(2, 0)}.${getRandom(9, 0)}s`;
 			document.body.appendChild(el);
 		});

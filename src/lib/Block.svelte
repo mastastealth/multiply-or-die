@@ -9,6 +9,7 @@
 	import mushroom from "../assets/mushroom.png";
 	import mushroom2 from "../assets/mushroom2.png";
 	import mushroom3 from "../assets/mushroom3.png";
+	import pikmin from "../assets/y_pikmin.png";
 
 	const timer = new Timer();
 	const {
@@ -56,7 +57,11 @@
 		1: mushroom,
 		2: mushroom2,
 		3: mushroom3,
+		pikmin,
 	};
+	const randomImage = getRandom(100);
+	const src =
+		randomImage === 100 ? mushroomSpr.pikmin : mushroomSpr[getRandom(3)];
 
 	// If this was created by another box, let's do more updates to directions
 	if (from) {
@@ -158,7 +163,7 @@
 	<img
 		class={gameOver &&
 			"animate__animated animate__infinite animate__rubberBand"}
-		src={mushroomSpr[getRandom(3)]}
+		{src}
 		alt="Little Guy"
 		data-show
 		data-mushroom
@@ -286,6 +291,10 @@
 
 		&[data-mushroom] {
 			max-width: 80%;
+		}
+
+		&[src~="pikmin"] {
+			filter: none !important;
 		}
 	}
 
